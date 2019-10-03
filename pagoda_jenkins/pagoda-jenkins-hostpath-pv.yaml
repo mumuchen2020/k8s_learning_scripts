@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pagoda-jenkins-hostpath-pv
+  labels:
+    name: pagoda-jenkins-hostpath-pv
+spec:
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /Users/roy/k8s_persistent_data/pagoda_jenkins
+  persistentVolumeReclaimPolicy: Retain
