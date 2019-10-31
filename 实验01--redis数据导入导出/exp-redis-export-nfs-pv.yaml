@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: exp-redis-export-nfs-pv
+  labels:
+    name: exp-redis-export-nfs-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: 192.168.255.254
+    path: /data/k8s_nfs_data/exp-redis-export-data

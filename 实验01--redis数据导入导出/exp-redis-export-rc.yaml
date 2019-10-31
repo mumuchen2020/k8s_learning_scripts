@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: exp-redis-export
+  labels:
+    name: exp-redis-export
+spec:
+  replicas: 1
+  selector:
+    name: exp-redis-export
+  template:
+    metadata:
+      labels:
+        name: exp-redis-export
+    spec:
+      containers:
+        - name: exp-redis-export
+          image: redis:5.0.5
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - name: exp-redis-export-data
+              mountPath: /data
+      volumes:
+        - name: exp-redis-export-data
+          persistentVolumeClaim:
+            claimName: exp-redis-export-nfs-pvc
