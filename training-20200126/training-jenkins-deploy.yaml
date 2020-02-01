@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: training-jenkins-deploy
+  namespace: training-20200126
+  labels:
+    name: training-jenkins-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: training-jenkins
+  template:
+    metadata:
+      labels:
+        name: training-jenkins
+    spec:
+      containers:
+        - name: training-jenkins
+          image: registry.k8s.example.com:5000/jenkins/jenkins:lts
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: training-jenkins-data
+              mountPath: /var/jenkins_home
+      volumes:
+        - name: training-jenkins-data
+          persistentVolumeClaim:
+            claimName: nfs-pvc-training-jenkins
