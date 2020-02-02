@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: training-mysql-deploy
+  namespace: training-20200126
+  labels:
+    name: training-mysql-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: training-mysql
+  template:
+    metadata:
+      labels:
+        name: training-mysql
+    spec:
+      containers:
+        - name: training-mysql
+          image: registry.k8s.example.com:5000/mysql:5.7.29
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: training-mysql-data
+              mountPath: /var/jenkins_home
+      volumes:
+        - name: training-mysql-data
+          persistentVolumeClaim:
+            claimName: nfs-pvc-training-mysql
