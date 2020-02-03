@@ -18,11 +18,32 @@ spec:
       containers:
         - name: training-mysql
           image: registry.k8s.example.com:5000/mysql:5.7.29
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: training-mysql-configmap
+                  key: MYSQL_ROOT_PASSWORD
+            - name: MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: training-mysql-configmap
+                  key: MYSQL_DATABASE
+            - name: MYSQL_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: training-mysql-configmap
+                  key: MYSQL_USER
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: training-mysql-configmap
+                  key: MYSQL_PASSWORD
           ports:
             - containerPort: 3306
           volumeMounts:
             - name: training-mysql-data
-              mountPath: /var/jenkins_home
+              mountPath: /var/lib/mysql
       volumes:
         - name: training-mysql-data
           persistentVolumeClaim:
