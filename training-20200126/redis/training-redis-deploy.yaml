@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: training-redis-deploy
+  namespace: training-20200126
+  labels:
+    name: training-redis-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: training-redis
+  template:
+    metadata:
+      labels:
+        name: training-redis
+    spec:
+      containers:
+        - name: training-redis
+          image: registry.k8s.example.com:5000/redis:5.0.7
+          resources:
+            requests:
+              cpu: 100m          #限制cpu的数量为0.1个
+              memory: 100Mi      #限制内存为100Mi
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - name: training-redis-data
+              mountPath: /data
+      volumes:
+        - name: training-redis-data
+          persistentVolumeClaim:
+            claimName: nfs-pvc-training-redis
