@@ -6,10 +6,9 @@ metadata:
   labels:
     name: training-zabbix-server-mysql-svc
 spec:
-  type: NodePort
-  ports:
-    - port: 10051        # 服务访问端口
-      targetPort: 10051  # 容器端口
-      nodePort: 30006  # NodePort，节点上监听的端口
+  clusterIP: "None"
   selector:
     name: training-zabbix-server-mysql
+  ports:
+    - port: 10051        # 服务访问端口
+      targetPort: 10051

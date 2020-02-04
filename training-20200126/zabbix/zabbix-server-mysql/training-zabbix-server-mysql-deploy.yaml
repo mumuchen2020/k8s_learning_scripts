@@ -31,6 +31,11 @@ spec:
                 configMapKeyRef:
                   name: training-zabbix-configmap
                   key: ZBX_DB_SERVER_PORT
+            - name: ZBX_LISTENIP
+              valueFrom:
+                configMapKeyRef:
+                  name: training-zabbix-configmap
+                  key: ZBX_SERVER_LISTENIP
             - name: MYSQL_DATABASE
               valueFrom:
                 configMapKeyRef:
