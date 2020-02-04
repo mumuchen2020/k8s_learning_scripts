@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: training-zabbix-web-apache-mysql-deploy
+  namespace: training-20200126
+  labels:
+    name: training-zabbix-web-apache-mysql-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: training-zabbix-web-apache-mysql
+  template:
+    metadata:
+      labels:
+        name: training-zabbix-web-apache-mysql
+    spec:
+      containers:
+        - name: training-zabbix-web-apache-mysql
+          image: registry.k8s.example.com:5000/zabbix/zabbix-web-apache-mysql:centos-4.0.17
+          ports:
+            - containerPort: 80
+          env:
+            - name: ZBX_SERVER_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: training-zabbix-configmap
+                  key: ZBX_SERVER_NAME
+            - name: ZBX_SERVER_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: training-zabbix-configmap
+                  key: ZBX_SERVER_HOST
+            - name: ZBX_SERVER_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: training-zabbix-configmap
+                  key: ZBX_SERVER_PORT
+            - name: DB_SERVER_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: training-zabbix-configmap
+                  key: ZBX_DB_SERVER_HOST
+            - name: DB_SERVER_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: training-zabbix-configmap
+                  key: ZBX_DB_SERVER_PORT
+            - name: MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: training-zabbix-configmap
+                  key: ZBX_MYSQL_DATABASE
+            - name: MYSQL_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: training-zabbix-configmap
+                  key: ZBX_MYSQL_USER
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: training-zabbix-configmap
+                  key: ZBX_MYSQL_PASSWORD
+            - name: PHP_TZ
+              valueFrom:
+                configMapKeyRef:
+                  name: training-zabbix-configmap
+                  key: ZBX_PHP_TZ

@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    daemonset: training-zabbix-agent-ds
+  name: training-zabbix-agent-ds
+  namespace: training-20200126
+spec:
+  selector:
+    matchLabels:
+      daemonset: training-zabbix-agent-ds
+  template:
+    metadata:
+      labels:
+        daemonset: training-zabbix-agent-ds
+    spec:
+      containers:
+      - name: training-zabbix-agent-ds
+        env:
+        - name: ZBX_HOSTNAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: ZBX_SERVER_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: training-zabbix-configmap
+              key: ZBX_SERVER_HOST
+        - name: ZBX_SERVER_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: training-zabbix-configmap
+              key: ZBX_SERVER_PORT
+        image: registry.k8s.example.com:5000/zabbix/zabbix-agent:centos-4.0.17
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 10050 #使用hostport方式暴露地址
+          hostPort: 10050
+        resources:
+          limits:
+            cpu: 100m
+            memory: 300Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
