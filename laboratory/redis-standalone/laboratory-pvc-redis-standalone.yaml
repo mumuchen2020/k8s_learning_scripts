@@ -1,0 +1,17 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: laboratory-pvc-redis-standalone
+  namespace: laboratory
+  labels:
+    name: laboratory-pvc-redis-standalone
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  selector:
+    matchLabels:
+      name: laboratory-pv-nfs-redis-standalone

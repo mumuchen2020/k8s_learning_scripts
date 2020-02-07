@@ -1,0 +1,17 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: laboratory-pv-nfs-redis-standalone
+  namespace: laboratory
+  labels:
+    name: laboratory-pv-nfs-redis-standalone
+spec:
+  persistentVolumeReclaimPolicy: Retain
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 192.168.255.252
+    path: /data/k8s_nfs_data/laboratory/redis-standalone
