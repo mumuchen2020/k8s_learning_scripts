@@ -16,6 +16,13 @@ spec:
       labels:
         name: laboratory-redis-standalone
     spec:
+      initContainers:
+        - name: sysctl
+          image: registry.k8s.example.com:5000/busybox:1.31.1
+          command: ["sysctl"]
+          args: ["-w", "net.core.somaxconn=65535"]
+          securityContext:
+            privileged: true
       containers:
         - name: laboratory-redis-standalone
           image: registry.k8s.example.com:5000/redis:5.0.7
@@ -33,6 +40,7 @@ spec:
             - name: laboratory-redis-standalone-conf
               mountPath: /usr/local/etc/redis/
               readOnly: true
+
       volumes:
         - name: laboratory-redis-standalone-data
           persistentVolumeClaim:
