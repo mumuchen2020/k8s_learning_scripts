@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: laboratory-pv-nfs-jenkins
+  labels:
+    name: laboratory-pv-nfs-jenkins
+spec:
+  persistentVolumeReclaimPolicy: Retain
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 192.168.255.252
+    path: /data/k8s_nfs_data/laboratory/jenkins
