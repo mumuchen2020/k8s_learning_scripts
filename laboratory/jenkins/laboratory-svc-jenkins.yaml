@@ -6,10 +6,10 @@ metadata:
   labels:
     name: jenkins
 spec:
-  type: NodePort
+  type: ClusterIP
+  clusterIP: 10.99.167.214
   ports:
     - port: 8080        # 服务访问端口
       targetPort: 8080  # 容器端口
-      nodePort: 31001   # NodePort，节点上监听的端口
   selector:
     name: jenkins

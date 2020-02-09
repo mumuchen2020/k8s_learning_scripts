@@ -6,10 +6,10 @@ metadata:
   labels:
     name: mysql
 spec:
-  type: NodePort
+  type: ClusterIP
+  clusterIP: 10.106.220.79
   ports:
     - port: 3306        # 服务访问端口
       targetPort: 3306  # 容器端口
-      nodePort: 31002   # NodePort，节点上监听的端口
   selector:
     name: mysql

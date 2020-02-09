@@ -7,10 +7,10 @@ metadata:
   labels:
     name: redis
 spec:
-  type: NodePort
+  type: ClusterIP
+  clusterIP: 10.97.72.56
   ports:
     - port: 6379        # 服务访问端口
       targetPort: 6379  # 容器端口
-      nodePort: 31000   # NodePort，节点上监听的端口
   selector:
     name: redis
