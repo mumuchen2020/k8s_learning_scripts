@@ -2,10 +2,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: laboratory-svc-redis-standalone
+  name: redis
   namespace: laboratory
   labels:
-    name: laboratory-svc-redis-standalone
+    name: redis
 spec:
   type: NodePort
   ports:
@@ -13,4 +13,4 @@ spec:
       targetPort: 6379  # 容器端口
       nodePort: 31000   # NodePort，节点上监听的端口
   selector:
-    name: laboratory-redis-standalone
+    name: redis

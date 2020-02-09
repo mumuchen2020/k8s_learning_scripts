@@ -1,15 +1,15 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: laboratory-pv-nfs-jenkins
+  name: laboratory-pv-nfs-consul-server-cluster
   labels:
-    name: laboratory-pv-nfs-jenkins
+    name: laboratory-pv-nfs-consul-server-cluster
 spec:
   persistentVolumeReclaimPolicy: Retain
   capacity:
     storage: 20Gi
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   nfs:
     server: 192.168.255.252
-    path: /data/k8s_nfs_data/laboratory/jenkins
+    path: /data/k8s_nfs_data/laboratory/consul-server-cluster

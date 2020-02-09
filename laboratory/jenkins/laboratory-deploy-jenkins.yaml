@@ -1,29 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: laboratory-deploy-jenkins
+  name: jenkins
   namespace: laboratory
   labels:
-    name: laboratory-deploy-jenkins
+    name: jenkins
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: laboratory-jenkins
+      name: jenkins
   template:
     metadata:
       labels:
-        name: laboratory-jenkins
+        name: jenkins
     spec:
       containers:
-        - name: laboratory-jenkins
+        - name: jenkins
           image: registry.k8s.example.com:5000/jenkins/jenkins:lts
           ports:
             - containerPort: 8080
           volumeMounts:
-            - name: laboratory-jenkins-data
+            - name: data
               mountPath: /var/jenkins_home
       volumes:
-        - name: laboratory-jenkins-data
+        - name: data
           persistentVolumeClaim:
-            claimName: laboratory-pvc-jenkins
+            claimName: jenkins

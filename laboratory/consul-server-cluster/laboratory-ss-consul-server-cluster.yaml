@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: laboratory-ss-consul-server-cluster
+  namespace: laboratory
+spec:
+  serviceName: laboratory-svc-consul-server-cluster
+  selector:
+    matchLabels:
+      app: laboratory-consul-server-cluster
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: laboratory-consul-server-cluster
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: laboratory-consul-server-cluster
+          image: registry.k8s.example.com:5000/consul:1.6.2
+          args:
+               - "agent"
+               - "-server"
+               - "-bootstrap-expect=3"
+               - "-ui"
+               - "-data-dir=/consul/data"
+               - "-bind=0.0.0.0"
+               - "-client=0.0.0.0"
+               - "-advertise=$(PODIP)"
+               - "-retry-join=laboratory-consul-server-cluster-0.laboratory-svc-consul-server-cluster.$(NAMESPACE).svc.cluster.local"
+               - "-retry-join=laboratory-consul-server-cluster-1.laboratory-svc-consul-server-cluster.$(NAMESPACE).svc.cluster.local"
+               - "-retry-join=laboratory-consul-server-cluster-2.laboratory-svc-consul-server-cluster.$(NAMESPACE).svc.cluster.local"
+               - "-domain=cluster.local"
+               - "-disable-host-node-id"
+          env:
+            - name: PODIP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          ports:
+              - containerPort: 8500
+                name: ui-port
+              - containerPort: 8400
+                name: alt-port
+              - containerPort: 53
+                name: udp-port
+              - containerPort: 8443
+                name: https-port
+              - containerPort: 8080
+                name: http-port
+              - containerPort: 8301
+                name: serflan
+              - containerPort: 8302
+                name: serfwan
+              - containerPort: 8600
+                name: consuldns
+              - containerPort: 8300
+                name: server
+          volumeMounts:
+              - name: course-nfs-storage
+                mountPath: /consul/data
+  volumeClaimTemplates:
+    - metadata:
+        name: course-nfs-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        selector:
+          matchLabels:
+            name: course-nfs-storage
+        resources:
+          requests:
+            storage: 2Gi

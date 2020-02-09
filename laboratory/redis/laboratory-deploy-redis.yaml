@@ -2,19 +2,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: laboratory-deploy-redis-standalone
+  name: redis
   namespace: laboratory
   labels:
-    name: laboratory-deploy-redis-standalone
+    name: redis
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: laboratory-redis-standalone
+      name: redis
   template:
     metadata:
       labels:
-        name: laboratory-redis-standalone
+        name: redis
     spec:
       initContainers:
         - name: sysctl
@@ -24,27 +24,26 @@ spec:
           securityContext:
             privileged: true
       containers:
-        - name: laboratory-redis-standalone
+        - name: redis
           image: registry.k8s.example.com:5000/redis:5.0.7
           resources:
             requests:
               cpu: 100m
               memory: 100Mi
           command: ["redis-server"]
-          args: ["/usr/local/etc/redis/redis-standalone.conf"] # 配置文件中的daemon值要设置为no。
+          args: ["/usr/local/etc/redis/redis.conf"] # 配置文件中的daemon值要设置为no。
           ports:
             - containerPort: 6379
           volumeMounts:
-            - name: laboratory-redis-standalone-data
+            - name: data
               mountPath: /data
-            - name: laboratory-redis-standalone-conf
+            - name: conf
               mountPath: /usr/local/etc/redis/
               readOnly: true
-
       volumes:
-        - name: laboratory-redis-standalone-data
+        - name: data
           persistentVolumeClaim:
-            claimName: laboratory-pvc-redis-standalone
-        - name: laboratory-redis-standalone-conf
+            claimName: redis
+        - name: conf
           configMap:
-            name: laboratory-cm-redis-standalone.conf
+            name: redis.conf
