@@ -1,22 +1,38 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: training-zabbix-server-mysql-deploy
-  namespace: training-20200126
+  name: zabbix-server
+  namespace: laboratory
   labels:
-    name: training-zabbix-server-mysql-deploy
+    name: zabbix-server
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: training-zabbix-server-mysql
+      name: zabbix-server
   template:
     metadata:
       labels:
-        name: training-zabbix-server-mysql
+        name: zabbix-server
     spec:
       containers:
-        - name: training-zabbix-server-mysql
+        - name: zabbix-agent
+          image: registry.k8s.example.com:5000/zabbix/zabbix-agent:centos-4.0.17
+          ports:
+            - containerPort: 10050
+          env:
+            - name: ZBX_SERVER_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: zabbix
+                  key: ZBX_SERVER_HOST
+            - name: ZBX_SERVER_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: zabbix
+                  key: ZBX_SERVER_PORT
+
+        - name: zabbix-server
           image: registry.k8s.example.com:5000/zabbix/zabbix-server-mysql:centos-4.0.17
           ports:
             - containerPort: 10051
@@ -24,30 +40,30 @@ spec:
             - name: DB_SERVER_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: training-zabbix-configmap
+                  name: zabbix
                   key: ZBX_DB_SERVER_HOST
             - name: DB_SERVER_PORT
               valueFrom:
                 configMapKeyRef:
-                  name: training-zabbix-configmap
+                  name: zabbix
                   key: ZBX_DB_SERVER_PORT
             - name: ZBX_LISTENIP
               valueFrom:
                 configMapKeyRef:
-                  name: training-zabbix-configmap
+                  name: zabbix
                   key: ZBX_SERVER_LISTENIP
             - name: MYSQL_DATABASE
               valueFrom:
                 configMapKeyRef:
-                  name: training-zabbix-configmap
+                  name: zabbix
                   key: ZBX_MYSQL_DATABASE
             - name: MYSQL_USER
               valueFrom:
                 configMapKeyRef:
-                  name: training-zabbix-configmap
+                  name: zabbix
                   key: ZBX_MYSQL_USER
             - name: MYSQL_PASSWORD
               valueFrom:
                 configMapKeyRef:
-                  name: training-zabbix-configmap
+                  name: zabbix
                   key: ZBX_MYSQL_PASSWORD
